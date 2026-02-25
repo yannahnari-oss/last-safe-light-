@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Last Safe Light 🌟</title>
+<link href="https://fonts.googleapis.com/css2?family=Laila:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --main-bg: linear-gradient(to right,#c2e9fb,#fcb69f);
+  --button-bg: #6a5acd;
+  --button-hover: #483d8b;
+  --section-bg: #ffffff;
+  --post-bg: #f9f9f9;
+  --ai-bg: #6a5acd;
+  --game-card-bg: #dcdcdc;
+}
+body { font-family: 'Laila', sans-serif; margin:0; padding:0; background: var(--main-bg);}
+header { background: var(--button-bg); color:white; text-align:center; padding:20px 10px;}
+header h1 { margin:0; font-size:24px; }
+header p { margin:5px 0 0; font-size:14px; }
+nav { display:flex; justify-content:center; gap:10px; margin:10px; flex-wrap:wrap;}
+nav button { padding:10px 15px; border:none; border-radius:20px; background: var(--button-bg); color:white; cursor:pointer; font-size:14px;}
+nav button:hover { background: var(--button-hover);}
+section { display:none; padding:20px; max-width:500px; margin:auto; background: var(--section-bg); border-radius:20px; box-shadow:0px 5px 15px rgba(0,0,0,0.1);}
+textarea,input,select { width:100%; padding:10px; margin-top:8px; border-radius:12px; border:1px solid #ccc; }
+button.action-btn { margin-top:8px; padding:10px 18px; border:none; border-radius:25px; background: var(--button-bg); color:white; cursor:pointer; font-size:14px;}
+button.action-btn:hover { background: var(--button-hover);}
+.ai-msg { background: var(--ai-bg); color:white; padding:8px 12px; border-radius:15px; margin:5px 0; word-wrap:break-word;}
+.user-msg { background:#dcdcdc; text-align:right; padding:8px 12px; border-radius:15px; margin:5px 0; word-wrap:break-word;}
+#aiResponse,#lifeStatus,#diarySaved,#gameBoard,#todoList { max-height:400px; overflow-y:auto; padding:10px; border-radius:15px; background:#f1f1f1; margin-top:10px;}
+.post { background: var(--post-bg); padding:8px; margin-top:8px; border-radius:12px;}
+.card { display:inline-block; width:60px; height:60px; margin:5px; font-size:32px; text-align:center; vertical-align:middle; line-height:60px; background: var(--game-card-bg); border-radius:12px; cursor:pointer;}
+</style>
+</head>
+<body>
+
+<header>
+<h1>The Last Safe Light 🌟</h1>
+<p>Rant, chat, journal & relax!</p>
+</header>
+
+<nav>
+<button onclick="showSection('account')">👤 Account</button>
+<button onclick="showSection('ai')">🤍 Comfort AI</button>
+<button onclick="showSection('life')">💫 Life Status</button>
+<button onclick="showSection('diary')">📔 Journal</button>
+<button onclick="showSection('game')">🎮 Emoji Game</button>
+<button onclick="openThemeSelector()">🎨 Theme</button>
+</nav>
+
+<!-- ACCOUNT -->
+<section id="account">
+<h2>👤 Account</h2>
+<div id="registerForm">
+<h3>Register</h3>
+<input type="text" id="regUsername" placeholder="Username">
+<input type="file" id="regPFP" accept="image/*">
+<input type="number" id="regYear" placeholder="Birth Year">
+<input type="number" id="regMonth" placeholder="Birth Month">
+<input type="number" id="regDay" placeholder="Birth Day">
+<select id="regGender">
+<option value="">Select Gender</option>
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+<option value="Other">Other</option>
+</select>
+<textarea id="regBio" placeholder="Bio"></textarea>
+<input type="password" id="regPassword" placeholder="Password">
+<label><input type="checkbox" id="showRegPassword"> Show Password</label>
+<br>
+<button class="action-btn" onclick="register()">Register</button>
+</div>
+
+<div id="loginForm" style="margin-top:20px;">
+<h3>Log In</h3>
+<input type="text" id="loginUsername" placeholder="Username">
+<input type="password" id="loginPassword" placeholder="Password">
+<label><input type="checkbox" id="showLoginPassword"> Show Password</label>
+<br>
+<button class="action-btn" onclick="login()">Log In</button>
+</div>
+
+<div id="accountInfo" style="display:none; margin-top:20px;">
+<h3>Welcome, <span id="accountName"></span>!</h3>
+<img id="accountPFP" src="" alt="Profile Picture" width="100" style="border-radius:50%">
+<p>Birthdate: <span id="accountBD"></span></p>
+<p>Gender: <span id="accountGender"></span></p>
+<p>Bio: <span id="accountBio"></span></p>
+<button class="action-btn" onclick="logout()">Log Out</button>
+</div>
+</section>
+
+<!-- AI -->
+<section id="ai">
+<h2>🤍 Comfort AI</h2>
+<textarea id="aiInput" placeholder="Type your feelings..."></textarea>
+<br>
+<button class="action-btn" onclick="comfortAI()">Send</button>
+<div id="aiResponse"></div>
+</section>
+
+<!-- LIFE STATUS -->
+<section id="life">
+<h2>💫 Life Status</h2>
+<label for="statusType">Choose type:</label>
+<select id="statusType" onchange="toggleMood()">
+  <option value="bible">Bible Verse</option>
+  <option value="inspiration">Inspirational Quote</option>
+  <option value="reminder">Reminder Quote</option>
+  <option value="mood">Mood-Based Quote</option>
+</select>
+<br><br>
+<div id="moodSelect" style="display:none;">
+<label for="moodType">Choose mood:</label>
+<select id="moodType">
+  <option value="Happy">😊 Happy</option>
+  <option value="Sad">😢 Sad</option>
+  <option value="Angry">😡 Angry</option>
+  <option value="Anxious">😰 Anxious</option>
+  <option value="Excited">🤩 Excited</option>
+  <option value="Relaxed">😌 Relaxed</option>
+  <option value="Lonely">😔 Lonely</option>
+</select>
+<br><br>
+</div>
+<button class="action-btn" onclick="generateLifeStatus()">Generate Life Status</button>
+<div id="lifeStatus"></div>
+</section>
+
+<!-- JOURNAL -->
+<section id="diary">
+<h2>📔 Personal Journal</h2>
+<input id="diaryTitle" placeholder="Title (optional)"/>
+<select id="diaryMood">
+<option value="">Select Mood</option>
+<option value="Happy">😊 Happy</option>
+<option value="Sad">😢 Sad</option>
+<option value="Angry">😡 Angry</option>
+<option value="Anxious">😰 Anxious</option>
+<option value="Excited">🤩 Excited</option>
+<option value="Relaxed">😌 Relaxed</option>
+<option value="Lonely">😔 Lonely</option>
+</select>
+<textarea id="diaryInput" placeholder="Write privately..."></textarea>
+<br>
+<label>Background color:</label>
+<input type="color" id="diaryBgColor" value="#f9f9f9">
+<br>
+<label>Font style:</label>
+<select id="diaryFont">
+<option value="Arial">Arial</option>
+<option value="Courier New">Courier New</option>
+<option value="Georgia">Georgia</option>
+<option value="Verdana">Verdana</option>
+</select>
+<br>
+<h3>To Do List</h3>
+<input type="text" id="todoInput" placeholder="New Task">
+<button class="action-btn" onclick="addTodo()">Add Task</button>
+<div id="todoList"></div>
+<br>
+<button class="action-btn" onclick="saveDiary()">Save Entry</button>
+<div id="diarySaved"></div>
+</section>
+
+<!-- GAME -->
+<section id="game">
+<h2>🎮 Emoji Match Game</h2>
+<div id="gameBoard"></div>
+<button class="action-btn" onclick="startGame()">Restart Game</button>
+</section>
+
+<!-- THEME -->
+<section id="themeSelector" style="display:none; padding:20px; max-width:400px; margin:auto; background:white; border-radius:20px;">
+<h3>🎨 Customize Theme</h3>
+<label>Button Color: </label><input type="color" id="themeButtonColor" value="#6a5acd"><br>
+<label>Section Background: </label><input type="color" id="themeSectionColor" value="#ffffff"><br>
+<label>Post/Diary Background: </label><input type="color" id="themePostColor" value="#f9f9f9"><br>
+<label>AI Message Color: </label><input type="color" id="themeAIColor" value="#6a5acd"><br>
+<label>Game Card Color: </label><input type="color" id="themeGameColor" value="#dcdcdc"><br>
+<button class="action-btn" onclick="applyTheme()">Apply</button>
+<button class="action-btn" onclick="closeThemeSelector()">Close</button>
+</section>
+
+<footer>
+The Last Safe Light © Research Innovation Project
+</footer>
+
+<script>
+// ---- NAVIGATION ----
+function showSection(id){
+  document.querySelectorAll("section").forEach(sec=>sec.style.display="none");
+  document.getElementById(id).style.display="block";
+}
+showSection('account');
+
+// ---- PASSWORD SHOW ----
+document.getElementById("showRegPassword").addEventListener("change", e=>{
+  regPassword.type = e.target.checked ? "text":"password";
+});
+document.getElementById("showLoginPassword").addEventListener("change", e=>{
+  loginPassword.type = e.target.checked ? "text":"password";
+});
+
+// ---- DATA ----
+let accounts = {};
+let currentUser = null;
+function saveData(){ localStorage.setItem("accounts", JSON.stringify(accounts)); }
+function loadData(){ accounts = JSON.parse(localStorage.getItem("accounts") || "{}"); }
+window.onload = loadData;
+
+// ---- REGISTER/LOGIN ----
+function register(){
+  const username = regUsername.value.trim();
+  if(!username || accounts[username]){ alert("Invalid username or taken"); return; }
+  const pfp = regPFP.files[0] ? URL.createObjectURL(regPFP.files[0]) : "";
+  accounts[username] = {username, pfp, year:regYear.value, month:regMonth.value, day:regDay.value, gender: regGender.value, bio: regBio.value, password: regPassword.value};
+  saveData(); alert("Registered successfully!");
+}
+function login(){
+  const username = loginUsername.value.trim();
+  const password = loginPassword.value;
+  if(!accounts[username] || accounts[username].password !== password){ alert("Invalid credentials!"); return; }
+  currentUser = accounts[username];
+  accountName.innerText = currentUser.username;
+  accountPFP.src = currentUser.pfp;
+  accountBD.innerText = `${currentUser.year}-${currentUser.month}-${currentUser.day}`;
+  accountGender.innerText = currentUser.gender;
+  accountBio.innerText = currentUser.bio;
+  loginForm.style.display="none"; registerForm.style.display="none"; accountInfo.style.display="block";
+  alert("Logged in successfully!");
+}
+function logout(){ currentUser=null; accountInfo.style.display="none"; registerForm.style.display="block"; loginForm.style.display="block"; }
+
+// ---- LIFE STATUS ----
+const bibleVerses = [
+  {text:"For I know the plans I have for you… – Jeremiah 29:11"}, {text:"I can do all things through Christ – Philippians 4:13"}, 
+  {text:"Trust in the Lord with all your heart – Proverbs 3:5"}, {text:"The Lord is my shepherd; I shall not want – Psalm 23:1"},
+  {text:"Be strong and courageous – Joshua 1:9"}, {text:"Delight yourself in the Lord – Psalm 37:4"}, {text:"Rejoice always – 1 Thessalonians 5:16"},
+  {text:"Pray without ceasing – 1 Thessalonians 5:17"}, {text:"God is our refuge and strength – Psalm 46:1"}, {text:"Cast all your anxiety – 1 Peter 5:7"}
+];
+
+const inspirationalQuotes = [
+{text:"Believe in yourself."},{text:"Every day is a new beginning."},{text:"Small steps still count."},{text:"Your feelings are valid."},
+{text:"Keep going, even if slow."},{text:"You are stronger than you think."},{text:"Stay positive."},{text:"Courage is key."},
+{text:"Embrace change."},{text:"Dream big."}
+];
+
+const reminderQuotes = [
+{text:"Drink water today."},{text:"Take deep breaths."},{text:"Smile at yourself."},{text:"Stretch your body."},{text:"Be kind today."},
+{text:"Remember to rest."},{text:"Focus on one task."},{text:"Appreciate small wins."},{text:"Check on a friend."},{text:"Write down goals."}
+];
+
+const moodQuotes = {
+  "Happy":[{text:"Happiness is here!"},{text:"Smile wide!"},{text:"Enjoy the sunshine!"},{text:"Laugh often!"},{text:"Good vibes only!"}],
+  "Sad":[{text:"It's okay to cry."},{text:"Feel your emotions."},{text:"Healing takes time."},{text:"Tomorrow is new."},{text:"You are not alone."}],
+  "Angry":[{text:"Take a deep breath."},{text:"Pause before reacting."},{text:"Channel energy positively."},{text:"Count to 10."},{text:"Release negativity."}],
+  "Anxious":[{text:"Breathe in, breathe out."},{text:"One step at a time."},{text:"Focus on what you can control."},{text:"You are safe."},{text:"Calm your mind."}],
+  "Excited":[{text:"Energy is yours!"},{text:"Embrace excitement!"},{text:"Celebrate today!"},{text:"Share your joy!"},{text:"Enjoy the moment!"}],
+  "Relaxed":[{text:"Take it slow."},{text:"Enjoy the peace."},{text:"Breathe deeply."},{text:"Relax your body."},{text:"Calm your thoughts."}],
+  "Lonely":[{text:"You are loved."},{text:"Reach out to someone."},{text:"Write your thoughts."},{text:"Enjoy quiet time."},{text:"Connection matters."}]
+};
+
+function toggleMood(){ moodSelect.style.display = statusType.value==="mood"?"block":"none"; }
+
+function generateLifeStatus(){
+  if(!currentUser) return;
+  let type=statusType.value; let item=null;
+  if(type==="bible") item=bibleVerses[Math.floor(Math.random()*bibleVerses.length)];
+  else if(type==="inspiration") item=inspirationalQuotes[Math.floor(Math.random()*inspirationalQuotes.length)];
+  else if(type==="reminder") item=reminderQuotes[Math.floor(Math.random()*reminderQuotes.length)];
+  else if(type==="mood") {
+    let mood=moodType.value;
+    item=moodQuotes[mood][Math.floor(Math.random()*moodQuotes[mood].length)];
+  }
+  lifeStatus.innerHTML=`<p>${item.text}</p>`;
+}
+
+// ---- AI ----
+const aiReplies=[
+"Hey! I hear you 😌 That must have been tough.","Wow, thanks for sharing! 🌟 You’re strong.","Hmm, that’s a lot. Let’s breathe together 😌",
+"Haha, I get it 😂 Life can be wild!","I understand. You’re doing amazing ❤️","Oof 😮 That sounds intense! Want to vent more?",
+"Ah, I see… it’s okay to feel that way 😌","Hmm… keep going, I’m listening 👂","Yay! You’re opening up. That’s brave 🌈","Sending a virtual hug 🤗 You're not alone!",
+"I feel you! Keep sharing 😄","That must be frustrating 😣 Want to tell me more?","You’re brave to say that 💪 It’s okay to feel upset.",
+"Life is tricky sometimes 😅 But you’re handling it!","Remember to take deep breaths 😌","Every day is a new chance 🌞","Your feelings are valid ❤️",
+"Small steps still count 💫","Even slow progress is progress 🐢","Keep smiling 😄","Believe in yourself today! 🌟","Focus on the good.","It's okay to rest.","Cherish small moments."
+];
+function addMessage(sender,text){
+  const msg=document.createElement("div"); msg.className=sender==="ai"?"ai-msg":"user-msg"; msg.innerText=text;
+  aiResponse.appendChild(msg); aiResponse.scrollTop=aiResponse.scrollHeight;
+}
+function comfortAI(){ let text=aiInput.value; if(!text) return; addMessage("user",text);
+let reply=aiReplies[Math.floor(Math.random()*aiReplies.length)]; addMessage("ai",reply); aiInput.value=""; }
+
+// ---- JOURNAL ----
+function saveDiary(){
+  const title=diaryTitle.value||"Untitled"; const mood=diaryMood.value||"No mood";
+  if(!diaryInput.value) return;
+  const entry=document.createElement("div"); entry.className="post";
+  entry.style.backgroundColor=diaryBgColor.value; entry.style.fontFamily=diaryFont.value;
+  entry.innerHTML=`<strong>${title}</strong> [${mood}]<br>${diaryInput.value}`;
+  diarySaved.appendChild(entry); diaryTitle.value=""; diaryMood.value=""; diaryInput.value="";
+}
+function addTodo(){ const val=todoInput.value.trim(); if(!val) return; const div=document.createElement("div");
+div.class
+Name="post"; div.innerText="📝 "+val; todoList.appendChild(div); todoInput.value="";}
+
+// ---- GAME ----
+let emojis=["😀","😂","🥰","😎","🤩","😜","😇","😱"];
+let cards=[], firstCard=null, secondCard=null;
+function startGame(){
+  cards=[...emojis,...emojis]; shuffle(cards);
+  const board=document.getElementById("gameBoard"); board.innerHTML=""; firstCard=null; secondCard=null;
+  cards.forEach(em=>{
+    const div=document.createElement("div");
+    div.className="card"; div.dataset.value=em; div.innerText="❓"; div.onclick=flipCard;
+    board.appendChild(div);
+  });
+}
+function flipCard(){
+  if(this.innerText!=="❓" || secondCard) return; this.innerText=this.dataset.value;
+  if(!firstCard){firstCard=this;} else{
+    secondCard=this;
+    if(firstCard.dataset.value===secondCard.dataset.value){
+      setTimeout(()=>{firstCard.style.visibility="hidden"; secondCard.style.visibility="hidden"; firstCard=null; secondCard=null;},500);
+    }else{
+      setTimeout(()=>{firstCard.innerText="❓"; secondCard.innerText="❓"; firstCard=null; secondCard=null;},1000);
+    }
+  }
+}
+function shuffle(array){ for(let i=array.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [array[i],array[j]]=[array[j],array[i]];}}
+
+// ---- THEME ----
+function openThemeSelector(){showSection("themeSelector");}
+function closeThemeSelector(){showSection('account');}
+function applyTheme(){
+  document.documentElement.style.setProperty("--button-bg",document.getElementById("themeButtonColor").value);
+  document.documentElement.style.setProperty("--section-bg",document.getElementById("themeSectionColor").value);
+  document.documentElement.style.setProperty("--post-bg",document.getElementById("themePostColor").value);
+  document.documentElement.style.setProperty("--ai-bg",document.getElementById("themeAIColor").value);
+  document.documentElement.style.setProperty("--game-card-bg",document.getElementById("themeGameColor").value);
+}
+</script>
+</body>
+</html>
